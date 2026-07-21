@@ -4,20 +4,36 @@
 **مساعد ذكي شغّال على موقعك** خلال دقائق، بدون خبرة برمجية.
 
 > 🔒 المفتاح (API key) محفوظ بأمان في الخادم ولا يظهر أبداً في المتصفح — الطريقة الصحيحة والآمنة.
+>
+> ✨ يقبل **ثلاثة مزوّدين** بمفتاح واحد: Anthropic (Claude) أو OpenAI (GPT) أو Google (Gemini) —
+> الكود يكتشف المزوّد تلقائياً من شكل مفتاحك.
 
 ---
 
 ## 🚀 انشر مساعدك خلال 3 خطوات
 
 ### 1) اضغط زر النشر
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/m7mdatd/cc&env=ANTHROPIC_API_KEY&envDescription=مفتاح%20Anthropic%20من%20console.anthropic.com)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/m7mdatd/cc&env=AI_API_KEY&envDescription=مفتاح%20أي%20مزوّد:%20Anthropic%20أو%20OpenAI%20أو%20Gemini)
 
-### 2) الصق المفتاح
-Vercel بيطلب منك قيمة `ANTHROPIC_API_KEY` — الصق مفتاحك من
-[console.anthropic.com](https://console.anthropic.com) واضغط Deploy.
+### 2) الصق مفتاحك
+Vercel بيطلب منك قيمة `AI_API_KEY` — الصق مفتاح **أي مزوّد** من الثلاثة واضغط Deploy.
 
 ### 3) خلاص!
 بعد لحظات يعطيك رابط مثل `your-app.vercel.app` — افتحه وجرّب مساعدك 🎉
+
+---
+
+## 🔑 من وين أجيب المفتاح؟
+
+اختر مزوّداً واحداً، سجّل، واحصل على مفتاحه. الكود يعرف المزوّد تلقائياً من بداية المفتاح:
+
+| المزوّد | يبدأ المفتاح بـ | من وين تجيبه | ملاحظة |
+|---------|----------------|--------------|--------|
+| **Google Gemini** | `AIza` | [aistudio.google.com](https://aistudio.google.com/apikey) | ✅ فيه مستوى مجاني — الأنسب للتجربة |
+| **Anthropic (Claude)** | `sk-ant-` | [console.anthropic.com](https://console.anthropic.com) | يحتاج رصيد مدفوع |
+| **OpenAI (GPT)** | `sk-` | [platform.openai.com](https://platform.openai.com/api-keys) | يحتاج رصيد مدفوع |
+
+> 💡 كل مزوّد يحتاج رصيده الخاص في حسابه. لو تبي تجرّب بدون دفع، ابدأ بـ **Gemini**.
 
 ---
 
@@ -47,9 +63,11 @@ const CONFIG = {
 | الملف | الوظيفة |
 |------|---------|
 | `index.html` | واجهة المحادثة (تنادي `/api/chat` فقط، لا تلمس المفتاح) |
-| `api/chat.js` | الوسيط الآمن الذي يحمل المفتاح ويكلّم الذكاء الاصطناعي |
+| `api/chat.js` | الوسيط الآمن الذي يحمل المفتاح ويكتشف المزوّد ويكلّم الذكاء الاصطناعي |
 | `vercel.json` | إعداد Vercel |
 | `.env.example` | مثال لمتغيّر البيئة |
+
+> لتغيير الموديل الافتراضي لكل مزوّد، افتح `api/chat.js` وعدّل القيم في أعلى الملف داخل `MODELS`.
 
 ---
 
