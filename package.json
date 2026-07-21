@@ -1,0 +1,7 @@
+{
+  "name": "ai-assistant-workshop",
+  "version": "1.0.0",
+  "description": "قالب مساعد ذكي جاهز للنشر على Vercel - ورشة أكاديمية توال",
+  "private": true,
+  "type": "module"
+}
