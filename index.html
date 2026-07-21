@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>مساعدي الذكي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ========================================================
+     لا تحتاج تعديل هذا الجزء — التخصيص كله في الأسفل
+     داخل CONFIG (ابحث عن كلمة CONFIG في الأسفل).
+     ======================================================== */
+  :root {
+    --accent: #0d9488;      /* اللون الأساسي — يتغيّر تلقائياً من CONFIG */
+    --accent-soft: #ccfbf1;
+    --bg: #f6f7f9;
+    --surface: #ffffff;
+    --ink: #1a2230;
+    --muted: #7b8794;
+    --line: #e7ebef;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Tajawal", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+  }
+  .app {
+    width: 100%;
+    max-width: 520px;
+    height: min(100%, 760px);
+    background: var(--surface);
+    border-radius: 22px;
+    box-shadow: 0 12px 40px rgba(20, 34, 48, 0.10);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  header {
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .avatar {
+    width: 44px; height: 44px;
+    border-radius: 14px;
+    background: var(--accent);
+    color: #fff;
+    display: grid; place-items: center;
+    font-weight: 800; font-size: 20px;
+    flex-shrink: 0;
+  }
+  header h1 { font-size: 17px; font-weight: 700; }
+  header .status {
+    font-size: 12px; color: var(--muted); font-weight: 500;
+    display: flex; align-items: center; gap: 5px; margin-top: 2px;
+  }
+  header .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #22c55e;
+  }
+  .chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .msg {
+    max-width: 82%;
+    padding: 11px 15px;
+    border-radius: 16px;
+    font-size: 15px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    animation: pop 0.18s ease;
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .msg.bot {
+    align-self: flex-start;
+    background: var(--bg);
+    border-bottom-right-radius: 5px;
+  }
+  .msg.user {
+    align-self: flex-end;
+    background: var(--accent);
+    color: #fff;
+    border-bottom-left-radius: 5px;
+  }
+  .typing { display: flex; gap: 4px; align-items: center; }
+  .typing span {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--muted);
+    animation: blink 1.2s infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: .2s; }
+  .typing span:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 0%,60%,100% { opacity: .25 } 30% { opacity: 1 } }
+  .composer {
+    padding: 14px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  textarea {
+    flex: 1;
+    resize: none;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 15px;
+    max-height: 120px;
+    outline: none;
+    background: var(--bg);
+    color: var(--ink);
+  }
+  textarea:focus { border-color: var(--accent); }
+  .send {
+    width: 46px; height: 46px;
+    border: none; border-radius: 14px;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+    transition: opacity .15s;
+  }
+  .send:disabled { opacity: .45; cursor: not-allowed; }
+  .send svg { width: 20px; height: 20px; }
+</style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="avatar" id="avatarLetter">م</div>
+      <div>
+        <h1 id="titleEl">مساعدي الذكي</h1>
+        <div class="status"><span class="dot"></span> متصل الآن</div>
+      </div>
+    </header>
+    <div class="chat" id="chat"></div>
+    <div class="composer">
+      <textarea id="input" rows="1" placeholder="اكتب رسالتك هنا..."></textarea>
+      <button class="send" id="send" title="إرسال">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+<script>
+  /* ========================================================
+     ✏️  CONFIG — عدّل من هنا فقط لتصنع مساعدك الخاص
+     غيّر النصوص واللون، واحفظ، وارفع — وخلاص!
+     ======================================================== */
+  const CONFIG = {
+    // اسم المساعد (يظهر في الأعلى)
+    assistantName: "مساعد توال",
+
+    // أول رسالة ترحيب يشوفها المستخدم
+    welcomeMessage: "أهلاً وسهلاً 👋 أنا مساعدك الذكي. كيف أقدر أساعدك اليوم؟",
+
+    // 🧠 شخصية المساعد وتعليماته — هذا أهم سطر!
+    // اكتب من هو، وشنو يسوي، وكيف يرد.
+    systemPrompt:
+      "أنت مساعد ذكي ودود يمثّل أكاديمية توال للتدريب. " +
+      "تجاوب باللغة العربية بإيجاز ووضوح، وبأسلوب محترم ومرحّب. " +
+      "إذا سُئلت عن شيء خارج نطاقك، اعتذر بلطف واقترح التواصل مع الأكاديمية.",
+
+    // اللون الأساسي (جرّب: #0d9488 أو #4f46e5 أو #e11d48 أو #ea580c)
+    primaryColor: "#0d9488"
+  };
+  /* ======================================================== */
+
+  // --- تطبيق الإعدادات على الصفحة (لا تحتاج تعديل تحت هذا) ---
+  document.documentElement.style.setProperty("--accent", CONFIG.primaryColor);
+  document.getElementById("titleEl").textContent = CONFIG.assistantName;
+  document.getElementById("avatarLetter").textContent =
+    CONFIG.assistantName.trim().charAt(0) || "م";
+  document.title = CONFIG.assistantName;
+
+  const chat = document.getElementById("chat");
+  const input = document.getElementById("input");
+  const sendBtn = document.getElementById("send");
+
+  // نحتفظ بتاريخ المحادثة ونرسله كامل في كل طلب (الدالة بلا ذاكرة)
+  const history = [];
+
+  function addBubble(text, who) {
+    const el = document.createElement("div");
+    el.className = "msg " + who;
+    el.textContent = text;
+    chat.appendChild(el);
+    chat.scrollTop = chat.scrollHeight;
+    return el;
+  }
+
+  function showTyping() {
+    const el = document.createElement("div");
+    el.className = "msg bot typing";
+    el.innerHTML = "<span></span><span></span><span></span>";
+    chat.appendChild(el);
+    chat.scrollTop = chat.scrollHeight;
+    return el;
+  }
+
+  // رسالة الترحيب
+  addBubble(CONFIG.welcomeMessage, "bot");
+
+  async function send() {
+    const text = input.value.trim();
+    if (!text) return;
+
+    input.value = "";
+    input.style.height = "auto";
+    sendBtn.disabled = true;
+
+    addBubble(text, "user");
+    history.push({ role: "user", content: text });
+
+    const typing = showTyping();
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          system: CONFIG.systemPrompt,
+          messages: history
+        })
+      });
+
+      const data = await res.json();
+      typing.remove();
+
+      if (!res.ok) {
+        addBubble("⚠️ " + (data.error || "صار خطأ. حاول مرة ثانية."), "bot");
+      } else {
+        addBubble(data.reply, "bot");
+        history.push({ role: "assistant", content: data.reply });
+      }
+    } catch (e) {
+      typing.remove();
+      addBubble("⚠️ تعذّر الاتصال بالخادم. تأكد من الإنترنت وحاول مجدداً.", "bot");
+    } finally {
+      sendBtn.disabled = false;
+      input.focus();
+    }
+  }
+
+  sendBtn.addEventListener("click", send);
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      send();
+    }
+  });
+  // تكبير حقل الكتابة تلقائياً
+  input.addEventListener("input", () => {
+    input.style.height = "auto";
+    input.style.height = Math.min(input.scrollHeight, 120) + "px";
+  });
+</script>
+</body>
+</html>
