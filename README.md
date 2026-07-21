@@ -8,11 +8,7 @@
 ## 🚀 النشر خلال 3 خطوات (للمتدربين)
 
 ### 1) اضغط زر النشر
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=REPLACE_WITH_YOUR_REPO_URL&env=ANTHROPIC_API_KEY&envDescription=مفتاح%20Anthropic%20من%20console.anthropic.com)
-
-> ⚠️ **للمدرّب:** بعد رفع المستودع على GitHub، بدّل `REPLACE_WITH_YOUR_REPO_URL`
-> في الرابط أعلاه برابط مستودعك، مثال:
-> `https://github.com/USERNAME/ai-assistant-workshop`
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/m7mdatd/cc&env=ANTHROPIC_API_KEY&envDescription=مفتاح%20Anthropic%20من%20console.anthropic.com)
 
 ### 2) الصق المفتاح
 Vercel بيطلب منك قيمة `ANTHROPIC_API_KEY` — الصق مفتاحك من
